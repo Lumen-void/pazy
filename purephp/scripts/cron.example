@@ -1,0 +1,8 @@
+# Run integration worker every minute
+* * * * * cd /Applications/XAMPP/xamppfiles/htdocs/pazy/purephp && /usr/bin/php bin/console.php worker:run --limit=100 --company=all --actor=1 >> logs/worker-cron.log 2>&1
+
+# Nightly backup at 2:10 AM
+10 2 * * * cd /Applications/XAMPP/xamppfiles/htdocs/pazy/purephp && /usr/bin/php bin/console.php backup:create >> logs/backup-cron.log 2>&1
+
+# Daily smoke validation at 3:00 AM
+0 3 * * * cd /Applications/XAMPP/xamppfiles/htdocs/pazy/purephp && /usr/bin/php bin/console.php qa:smoke --company=1 >> logs/smoke-cron.log 2>&1

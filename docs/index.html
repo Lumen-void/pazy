@@ -1,26 +1,137 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PazyFinance</title>
-  <style>
-    :root{color-scheme:dark;--bg:#07111a;--panel:#101b28;--line:#243447;--ink:#f3f7fb;--muted:#9fb0c2;--accent:#58d39b}
-    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,rgba(88,211,155,.18),transparent 30%),linear-gradient(180deg,#07111a,#0d1520);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif}
-    header{padding:56px clamp(20px,5vw,72px) 28px}h1{margin:0;font-size:clamp(44px,8vw,108px);line-height:.9;letter-spacing:0}p{max-width:820px;color:var(--muted);font-size:20px;line-height:1.6}
-    .badge{display:inline-flex;border:1px solid rgba(88,211,155,.45);color:var(--accent);border-radius:999px;padding:8px 12px;font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:.08em}
-    main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;padding:20px clamp(20px,5vw,72px) 72px}
-    figure{margin:0;border:1px solid var(--line);background:rgba(16,27,40,.78);border-radius:8px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-    img{width:100%;height:auto;display:block}figcaption{padding:14px 16px;color:var(--muted);font-weight:700}
-  </style>
-</head>
-<body>
-  <header><span class="badge">Public-safe project showcase</span><h1>PazyFinance</h1><p>Finance operations workspace covering procurement, AP invoices, integrations, payments, reimbursements and audit reporting.</p></header>
-  <main><figure><img src="media/01-public-home.jpg" alt="PazyFinance screen"><figcaption>01 public home</figcaption></figure>
-<figure><img src="media/03-dashboard.jpg" alt="PazyFinance screen"><figcaption>03 dashboard</figcaption></figure>
-<figure><img src="media/04-integrations-marketplace.jpg" alt="PazyFinance screen"><figcaption>04 integrations marketplace</figcaption></figure>
-<figure><img src="media/05-invoices-ap.jpg" alt="PazyFinance screen"><figcaption>05 invoices ap</figcaption></figure>
-<figure><img src="media/07-payments.jpg" alt="PazyFinance screen"><figcaption>07 payments</figcaption></figure>
-<figure><img src="media/09-reports-audit.jpg" alt="PazyFinance screen"><figcaption>09 reports audit</figcaption></figure></main>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pazy Finance | Public Demo</title>
+    <meta name="description" content="Public-safe Pazy Finance static app demo with fake workflow data.">
+    <link rel="stylesheet" href="./assets/app.css">
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <a class="brand" href="#dashboard">
+          <span class="brand-mark">P</span>
+          <span><strong>Pazy Finance</strong><small>Spend, payables and banking</small></span>
+        </a>
+        <nav>
+          <a class="active" href="#dashboard" data-route="dashboard">Dashboard</a>
+          <a href="#integrations" data-route="integrations">Integrations</a>
+          <a href="#payments" data-route="payments">Payments</a>
+          <a href="#invoices" data-route="invoices">Invoices</a>
+          <a href="#procurement" data-route="procurement">Procurement</a>
+          <a href="#reports" data-route="reports">Reports</a>
+          <a href="#audit" data-route="audit">Audit</a>
+        </nav>
+        <div class="safe-note">
+          <strong>Static showcase</strong>
+          <span>Built from fake records. Real PHP, MySQL, bank keys and logs stay local.</span>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="kicker">Public-safe finance workspace</p>
+            <h1>Control cash, approvals and vendor payouts from one app.</h1>
+          </div>
+          <div class="actions">
+            <button data-action="approve">Approve batch</button>
+            <button class="primary" data-action="pay">Release demo payout</button>
+          </div>
+        </header>
+
+        <section class="overview" id="dashboard">
+          <article class="command">
+            <div>
+              <p class="kicker">Today</p>
+              <h2>₹24.8L scheduled, ₹6.2L awaiting maker-checker approval.</h2>
+              <p>Demo company data shows how finance teams review invoices, connected banking, UPI collections and audit trails without exposing live accounts.</p>
+            </div>
+            <div class="cash-card">
+              <span>Available demo balance</span>
+              <strong>₹42,18,900</strong>
+              <div class="spark">
+                <i style="height:38%"></i><i style="height:62%"></i><i style="height:50%"></i><i style="height:76%"></i><i style="height:58%"></i><i style="height:86%"></i>
+              </div>
+            </div>
+          </article>
+          <div class="metrics">
+            <article><span>Invoices due</span><strong>38</strong><small>12 need GST match</small></article>
+            <article><span>Vendor payouts</span><strong>₹9.4L</strong><small>Queued for Friday</small></article>
+            <article><span>Policy blocks</span><strong>7</strong><small>Travel and SaaS checks</small></article>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="panel wide" id="payments">
+            <div class="panel-head">
+              <div><p class="kicker">Payments</p><h2>Approval queue</h2></div>
+              <select id="queueFilter"><option>All payments</option><option>High value</option><option>Needs tax match</option></select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Vendor</th><th>Category</th><th>Amount</th><th>Owner</th><th>Status</th></tr></thead>
+                <tbody id="paymentRows"></tbody>
+              </table>
+            </div>
+          </article>
+          <article class="panel" id="integrations">
+            <p class="kicker">Integrations</p>
+            <h2>Connected apps</h2>
+            <div class="connectors" id="connectors"></div>
+          </article>
+        </section>
+
+        <section class="grid">
+          <article class="panel" id="invoices">
+            <p class="kicker">Invoices</p>
+            <h2>AP automation</h2>
+            <div class="kanban">
+              <div><strong>Captured</strong><span>18 docs</span></div>
+              <div><strong>Matched</strong><span>26 docs</span></div>
+              <div><strong>Approved</strong><span>14 docs</span></div>
+            </div>
+          </article>
+          <article class="panel wide" id="procurement">
+            <p class="kicker">Procurement</p>
+            <h2>Purchase request workflow</h2>
+            <div class="workflow">
+              <span class="done">Request</span>
+              <span class="done">Budget</span>
+              <span class="active">Vendor quote</span>
+              <span>PO release</span>
+              <span>Invoice match</span>
+            </div>
+            <div class="request-card">
+              <strong>Laptop refresh for design team</strong>
+              <span>3 units, policy compliant, budget owner approved. Demo vendor pricing only.</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="grid">
+          <article class="panel wide" id="reports">
+            <p class="kicker">Reports</p>
+            <h2>Cash forecast</h2>
+            <div class="forecast">
+              <span style="height:45%"><em>Mon</em></span>
+              <span style="height:70%"><em>Tue</em></span>
+              <span style="height:56%"><em>Wed</em></span>
+              <span style="height:82%"><em>Thu</em></span>
+              <span style="height:64%"><em>Fri</em></span>
+              <span style="height:48%"><em>Sat</em></span>
+            </div>
+          </article>
+          <article class="panel" id="audit">
+            <p class="kicker">Audit</p>
+            <h2>Recent events</h2>
+            <ul class="audit-list" id="auditRows"></ul>
+          </article>
+        </section>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./assets/app.js"></script>
+  </body>
 </html>

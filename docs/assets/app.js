@@ -1,45 +1,30 @@
-const payments = [
-  ["Acme Cloud Services", "SaaS", "₹2,84,000", "Riya", "Pending"],
-  ["Northstar Logistics", "Freight", "₹1,48,500", "Kabir", "Approved"],
-  ["Vertex Office", "Procurement", "₹82,900", "Maya", "Pending"],
-  ["Bluefin Consultants", "Services", "₹3,15,400", "Arjun", "Tax match"]
-];
-
 const connectors = [
-  ["RazorpayX", "Connected"],
-  ["Zoho Books", "Connected"],
-  ["GST Portal", "Demo"],
-  ["Slack Alerts", "Connected"],
-  ["Bank Statement SFTP", "Manual"]
+  ["Banking provider", "Linked"],
+  ["Accounting system", "Linked"],
+  ["Tax portal", "Demo"],
+  ["Alert channel", "Linked"],
+  ["Statement import", "Manual"]
 ];
 
-const audit = [
-  ["Batch PAY-114 approved", "Maker-checker flow completed by demo CFO"],
-  ["Invoice INV-908 matched", "PO, GRN and GSTIN validated"],
-  ["Vendor bank change blocked", "Policy requires second approver"],
-  ["Cash forecast refreshed", "Sample bank balance imported"]
-];
-
-document.querySelector("#paymentRows").innerHTML = payments.map(row => `
+document.querySelector("#paymentRows").innerHTML = `
   <tr>
-    <td><strong>${row[0]}</strong></td>
-    <td>${row[1]}</td>
-    <td>${row[2]}</td>
-    <td>${row[3]}</td>
-    <td><span class="badge ${row[4] === "Approved" ? "ok" : "warn"}">${row[4]}</span></td>
+    <td colspan="5" class="empty-cell">
+      <strong>No payment table rows are published.</strong>
+      <span>Vendor, category, amount, owner and status values are cleared from the public deployment.</span>
+    </td>
   </tr>
-`).join("");
+`;
 
 document.querySelector("#connectors").innerHTML = connectors.map(row => `
   <div class="connector">
     <strong>${row[0]}</strong>
-    <span class="badge ${row[1] === "Connected" ? "ok" : "warn"}">${row[1]}</span>
+    <span class="badge ${row[1] === "Linked" ? "ok" : "warn"}">${row[1]}</span>
   </div>
 `).join("");
 
-document.querySelector("#auditRows").innerHTML = audit.map(item => `
-  <li><strong>${item[0]}</strong><span>${item[1]}</span></li>
-`).join("");
+document.querySelector("#auditRows").innerHTML = `
+  <li><strong>No audit events are published.</strong><span>Real actor, invoice, bank and approval records stay in the local database.</span></li>
+`;
 
 const toast = document.querySelector("#toast");
 const showToast = (message) => {
@@ -58,11 +43,16 @@ document.querySelectorAll("[data-action]").forEach(button => {
 });
 
 document.querySelectorAll("nav a").forEach(link => {
-  link.addEventListener("click", () => {
-    document.querySelectorAll("nav a").forEach(item => item.classList.remove("active"));
-    link.classList.add("active");
-  });
+  const route = link.dataset.route;
+  const page = window.location.pathname.split("/").pop().replace(".html", "") || "dashboard";
+  link.classList.toggle("active", route === page || (page === "index" && route === "dashboard"));
 });
+
+const currentPage = window.location.pathname.split("/").pop().replace(".html", "") || "dashboard";
+const target = document.querySelector(`#${currentPage}`);
+if (target && currentPage !== "dashboard" && currentPage !== "index") {
+  requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+}
 
 document.querySelector("#queueFilter").addEventListener("change", event => {
   showToast(`${event.target.value} selected for the sample payment queue.`);
